@@ -43,13 +43,8 @@ function connectClient(response) {
       var key = '14D1C011B0A010104120D1B1B1C0C030D03010203010203010203010203010203010';
       key = hex2a(key);
       client.send_string('$Supports |$Direction Download 30000|$Key '+key+'|');
-      console.log('Sent Key');
-      //~ sentKey = true;
-    //~ }
-    //~ else if(sentKey) {
-      //~ sentKey = false;
       client.send_string('$Get '+all_results_array[index]['path']+'$1|');
-      console.log('Sent Get');
+      console.log('Sent Key & Get');
       sentGet = true;
     }
     else if(sentGet) {
@@ -61,6 +56,7 @@ function connectClient(response) {
     else if(sentSend) {
       contents = contents.concat(data);
       progress += len;
+      drawProgress(progress, results[index]['size']);
       console.log(progress);
       if(progress === all_results_array[index]['size']) {
         
@@ -89,4 +85,8 @@ function saveToFile(url) {
   filename = path[path.length-1];
   $('#download').attr('download', filename);
   $('#download').attr('href', url);
+}
+
+function drawProgress(status, total) {
+  
 }
