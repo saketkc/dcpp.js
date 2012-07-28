@@ -92,8 +92,8 @@ function lock2key(lock) {
 						var hub = data.pop();
 						var tth = data.pop();
 						var nickname = data[1];
-						data=data.slice(2);
-						var filepath_with_size = data.join(" ");
+            
+						var filepath_with_size = data.slice(2).join(" ");
 						
 						var split_file_name = filepath_with_size.split(".");
 						//if (split_file_name.length<2){
@@ -103,7 +103,7 @@ function lock2key(lock) {
 						}
 						else {*/
 						
-						var filename_without_ext = split_file_name.join("");
+						var filename_without_ext = split_file_name.join(".");
 						var filesize = filesize_with_ext.replace( /^\D+/g, '');
 						var extension = filesize_with_ext.replace( /\d+$/, '');
 						var actual_file_name = filename_without_ext +"."+extension
