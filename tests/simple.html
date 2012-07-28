@@ -12,16 +12,46 @@
         WebSocket/websockify URI: <input id='target'>&nbsp;
         <input id='connectButton' type='button' value='Connect'
             onclick="connect();">
+            <br/><br/>
+            fdssssssssssssssss        <input id="getlock" type="text">&nbsp;
+        <input type="button" value="Get Lock" onClick="calllock();">
+
         <br> <br>
         <input id='sendText'>&nbsp;
         <input id='sendButton' type='button' value='Send' disabled
             onclick="send();">&nbsp;
         <br> <br>
+        
+        
         Log:<br><textarea id="messages" cols=80 rows=25></textarea>
     </body>
 
 
     <script>
+		// Coded by Mardeg
+		function sendlock(key){
+			ws.send_string("$Key "+key+"|");
+			
+		}
+		function calllock(){
+			
+			lock2key(document.getElementById("getlock").value);
+		}
+function nibbleswap(bits) {
+	return ((bits << 4) & 240) | ((bits >>> 4) & 15);
+}
+function chr(b) {
+	return (("..0.5.36.96.124.126.").indexOf("."+b+".")>0)?"/%DCN"+(0).toPrecision(4-b.toString().length).substr(2)+b+"%/":String.fromCharCode(b);
+}
+function lock2key(lock) {
+	var key = chr(nibbleswap(lock.charCodeAt(0) ^ lock.charCodeAt(-1) ^ lock.charCodeAt(-2) ^ 5));
+	for (var i=1; i<lock.length; i++) {
+		key += chr(nibbleswap(lock.charCodeAt(i) ^ lock.charCodeAt(i - 1)));
+	}
+	return key;
+}
+
+
         var $D = function(id) { return document.getElementById(id); },
             ws = null, msgs = $D('messages');
 
@@ -39,7 +69,17 @@
                 msg("Connected");
             });
             ws.on('message', function () {
-                msg("Received: " + ws.rQshiftStr());
+				//alert("here");
+				var response = ws.rQshiftStr();
+				alert(response);
+				//alert(response);
+								var responseContainsConnect = response.search("Pk=");
+								if (responseContainsConnect>=0){
+								lock = response.slice(6,responseContainsConnect);
+								key = lock2key(lock);
+								sendlock(key);}
+
+                msg("Received: " + response);
             });
             ws.on('close', function () {
                 disconnect();
