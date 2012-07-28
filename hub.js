@@ -156,7 +156,8 @@ var serverURL = "ws://localhost:8080";
 			$("#search-menu").hide();
 			$("#loading").hide();
 			
-			
+			//$( "#progress-bar" ).hide();
+
 			
 		
 

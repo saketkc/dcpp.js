@@ -56,8 +56,8 @@ function connectClient(response) {
     else if(sentSend) {
       contents.push.apply(contents, data);
       progress += len;
-      console.log(progress);
-      //drawProgress(progress, results[index]['size']);
+      //console.log(progress);
+      drawProgress(progress, all_results_array[index][3]);
       if(progress === all_results_array[index][3]) {
         
         var blob = createBlob(contents);
@@ -88,5 +88,10 @@ function saveToFile(url) {
 }
 
 function drawProgress(status, total) {
+	
+  //$("#progress-bar").show();
+  var value = status/total*100;
+  
+  $("#progress-bar").progressbar({value: value});
   
 }
