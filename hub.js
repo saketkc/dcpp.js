@@ -92,8 +92,9 @@ function lock2key(lock) {
 						var hub = data.pop();
 						var tth = data.pop();
 						var nickname = data[1];
-						data[1]="";
+						data=data.slice(2);
 						var filepath_with_size = data.join(" ");
+						
 						var split_file_name = filepath_with_size.split(".");
 						//if (split_file_name.length<2){
 							var filesize_with_ext = split_file_name.pop(); 
