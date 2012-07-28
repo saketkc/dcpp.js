@@ -87,27 +87,19 @@ function lock2key(lock) {
 					
 					split_response = response.split("$SR");
 					for(var i=0;i<split_response.length;i++){
-						var data = split_response[i].split(" ");
+						var data = split_response[i].split(' ');
 						var split_length =  data.length;
 						var hub = data.pop();
 						var tth = data.pop();
+            
 						var nickname = data[1];
             
 						var filepath_with_size = data.slice(2).join(" ");
 						
-						var split_file_name = filepath_with_size.split(".");
+						var split_file_name = filepath_with_size.split("\x05");
 						//if (split_file_name.length<2){
-							var filesize_with_ext = split_file_name.pop(); 
-							//if (nickname!="" && filesize!="" && actual_file_name!="")
-						/*{all_results_array.push({id:String(i),nick:nickname,path:filesize_with_ext,size:0});}
-						}
-						else {*/
-						
-						var filename_without_ext = split_file_name.join(".");
-						var filesize = filesize_with_ext.replace( /^\D+/g, '');
-						var extension = filesize_with_ext.replace( /\d+$/, '');
-						var actual_file_name = filename_without_ext +"."+extension
-						actual_file_name = actual_file_name.replace(/[\n\r]/g, '');
+						var actual_file_name = split_file_name[0];
+            var filesize = split_file_name[1];
 						//while filesize
 						if (nickname!="" && filesize!="" && actual_file_name!="")
 						{all_results_array.push({id:String(i),nick:nickname,path:actual_file_name,size:filesize});}	

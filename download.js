@@ -17,7 +17,7 @@ function hex2a(hex) {
 function connectClient(response) {
   
   var ip_port =  response.split(' ')[2].split('|')[0];
-  var client = new Websock();
+  client = new Websock();
   var uri = serverURL + '?token='+ip_port;
   
   var sentNick = false;
@@ -36,9 +36,7 @@ function connectClient(response) {
   });
   client.on('message', function () {
     var len = client.rQlen();
-    //var data = client.rQshiftBytes();
-    var data = client.rQshiftStr();
-    console.log(data);
+    var data = client.rQshiftBytes();
     
     if(sentNick) {
       sentNick = false;
@@ -51,7 +49,6 @@ function connectClient(response) {
     //~ else if(sentKey) {
       //~ sentKey = false;
       client.send_string('$Get '+all_results_array[index]['path']+'$1|');
-      console.log('$Get '+all_results_array[index]['path']+'$1|');
       console.log('Sent Get');
       sentGet = true;
     }
