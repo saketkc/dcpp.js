@@ -84,37 +84,35 @@ function lock2key(lock) {
 				}
 				
 				else if (responseContainsSearchResults>=0){
-					
-					split_response = response.split("$SR");
-					for(var i=0;i<split_response.length;i++){
-						var data = split_response[i].split(' ');
-						var split_length =  data.length;
-						var hub = data.pop();
-						var tth = data.pop();
-            
-						var nickname = data[1];
-            
-						var filepath_with_size = data.slice(2).join(" ");
-						
-						var split_file_name = filepath_with_size.split("\x05");
-						//if (split_file_name.length<2){
-						var actual_file_name = split_file_name[0];
-            var filesize = split_file_name[1];
-						//while filesize
-						if (nickname!="" && filesize!="" && actual_file_name!="")
-						{all_results_array.push({id:String(i),nick:nickname,path:actual_file_name,size:filesize});}	
-						
-						
-						
-					//}
-				}
-					//console.log(all_results_array);
-					
+					split_response = response.split('$SR');
+					for(i in split_response){
+            if(split_response.hasOwnProperty(i)) {
+              var len = split_response[i].length;
+              if(len === 0)
+                continue;
+              console.log(split_response[i]);
+              var data = split_response[i].split(' ');
+              var hub = data.pop();
+              var tth = data.pop();
+              var nickname = data[1];
+              var filepath_with_size = data.slice(2).join(" ");
+              var split_file_name = filepath_with_size.split("\x05");
+              var actual_file_name = split_file_name[0];
+              var filesize = split_file_name[1];
+              if (nickname!="" && filesize!="" && actual_file_name!="")
+                all_results_array.push(
+                  {
+                    id:String(i),
+                    nick:nickname,
+                    path:actual_file_name,
+                    size:filesize
+                  });
+            }
+          }
 		jQuery("#datatables").jqGrid({
 	datatype: "local",
 	height: 250,
 	autowidth:true,
-	repeatitems: false,
 	 records: "records",
 
 	
