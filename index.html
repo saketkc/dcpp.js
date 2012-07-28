@@ -27,20 +27,13 @@
 			@import "./include/bootstrap/css/demo_page.css";
 			@import "./include/bootstrap/css/demo_table.css";
 		</style>
-    <link rel="shortcut icon" href="include/bootstrap/docs/assets/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="include/bootstrap/docs/assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="include/bootstrap/docs/assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="include/bootstrap/docs/assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="include/bootstrap/docs/assets/ico/apple-touch-icon-57-precomposed.png">
     <link rel="stylesheet" type="text/css" media="screen" href="include/bootstrap/css/jquery-ui-1.8.1.custom.css" />
-<link rel="stylesheet" type="text/css" media="screen" href="include/bootstrap/css/ui.jqgrid.css" />
-<link rel="stylesheet" type="text/css" media="screen" href="include/bootstrap/css/ui.multiselect.css" />
-
-    <script src="include/util.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="include/bootstrap/css/ui.jqgrid.css" />
+	<script src="include/util.js"></script>
     <script src="include/base64.js"></script>
-    
     <script src="include/websock.js"></script> 
     <script src="include/bootstrap/js/tests/vendor/jquery.js"></script>
+    <script src="include/bootstrap/js/jquery-ui-custom.min.js"></script>
     <script src="include/jquery.dataTables.js"></script>
     <script src="include/jquery.jqGrid.min.js"></script>
     <script src="hub.js"></script>
@@ -70,13 +63,12 @@
     </div>
 
     <div class="container">
-     <div class="row"><input type="button" class="btn" onClick="disconnect();" value="Disconnect"></div>
+     
  
 	<form class="form-horizontal">
     <fieldset>
-        <div class="row-fluid hero-unit" id="connect-menu"> 
-        <h2>Connect to a Hub<div><img src="include/bootstrap/img/progress-bar.gif" id="loading" ></div>
-</h2>
+        <div class="row-fluid" id="connect-menu"> 
+        <h2>Connect to a Hub<div><img src="include/bootstrap/img/progress-bar.gif" id="loading" ></div></h2>
             <div class="span6">
                 <div class="control-group">
                     <label class="control-label" for="Address"><strong>Hub Address</strong></label>
@@ -109,18 +101,22 @@
         </div>
     </fieldset>
 </form>
-	<div class="row-fluid" id="search-menu">
+	<span class="row-fluid" id="search-menu">
 	 
 		<h2>Search</h2>
-		<form class="well form-search">
-  <input type="text" class="input-xlarge search-query" id="search-query">
-  <input type="button" class="btn" id="search" value="Search" onClick="searchDC();">
-</form>
-	</div>
+		
+			<input type="text" class="input-xlarge search-query" id="search-query">
+			<input type="button" class="btn" id="search" value="Search" onClick="searchDC();">
+		
+	</span>
 	
+	<div id="demo"></div>
 	<table id="datatables" width="100%">
-	<div id="ptoolbar" ></div>
-          </table>
+		<div id="ptoolbar" ></div>
+		<div class="span6">
+			<div id="progress-bar"></div>
+		</div>
+    </table>
 
 	 
  
@@ -130,6 +126,7 @@
       <hr>
 
       <footer>
+		  
         <p>&copy; Chaitanya Talnikar, Saket Choudhary  2012</p>
       </footer>
 

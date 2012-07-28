@@ -6,6 +6,7 @@ var serverURL = "ws://localhost:8080";
 		var oTable;
 		var giRedraw = false;
 		var isHelloCalled = false;
+		var counter = 1;
 
         function connect() {
 			$("#loading").show();
@@ -42,7 +43,7 @@ var serverURL = "ws://localhost:8080";
 						ws.send_string("$MyINFO $ALL "+nick+" <++ V:0.673,M:P,H:1/0/0,S:2>$ $0.1.$$10240$|");
 						hubConnected = true;
 						$("#connect-menu").slideUp();
-					$("#search-menu").show().slideDown();
+						$("#search-menu").show().slideDown();
 					}
 				else if(hubConnected) {
 					//Show search 
@@ -79,55 +80,69 @@ var serverURL = "ws://localhost:8080";
               var filesize = split_file_name[1];
               if (nickname!="" && filesize!="" && actual_file_name!="")
                 all_results_array.push(
-                  {
-                    id:String(i),
-                    nick:nickname,
-                    path:actual_file_name,
-                    size:filesize
-                  });
+                  [
+                   String(counter),
+                   nickname,
+                   actual_file_name,
+                   filesize
+                  ]);
+				counter+=1;
             }
           }
-		jQuery("#datatables").jqGrid({
-      datatype: "local",
-      height: 250,
-      autowidth:true,
-      records: "records",
+           $('#demo').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+    oTable = $('#example').dataTable( {
+        "aaData": all_results_array,
+        "aoColumns": [
+			{ "sTitle": "Sr No." },
+            { "sTitle": "NickName" },
+            { "sTitle": "Path" },
+            { "sTitle": "Size" }
+            
+           
+        ]
+    } );    
+    
+    
 
-      colNames:['Nick','Path', 'Size'],
-      colModel:[
-        {name:'nick',index:'nick', width:10, align:"center",sorttype:"string"},		
-        {name:'path',index:'path', width:190,align:"center",sorttype:"string"},		
-        {name:'size',index:'size', width:10,sorttype:"int"}		
-      ],
-   
-      sortname: 'size',
-      viewrecords: true,
-      sortorder: "desc",
-      onSelectRow: function(id){ 
-      
-      //var content = $('getCell', id , 'nick');
-        alert(id);
-        index = parseInt(id)-1;
-        getClient();
-     },
-   	
-   	caption: "All Results"
-  });
-  jQuery("#datatables").jqGrid('navGrid','#ptoolbar',{del:false,add:false,edit:false,search:false});
-  jQuery("#datatables").jqGrid('filterToolbar',{stringResult: true,searchOnEnter : false});
 
-for(var i=0;i<=all_results_array.length;i++){
-	jQuery("#datatables").jqGrid('addRowData',i+1,all_results_array[i]);
-}
+			$("#example tbody tr").click( function( e ) {
+				id = $(this).find("td").html();
+				index = parseInt(id)-1;
+				getClient();
+        if ( $(this).hasClass('row_selected') ) {
+            $(this).removeClass('row_selected');
+        }
+        else {
+            oTable.$('tr.row_selected').removeClass('row_selected');
+            $(this).addClass('row_selected');
+        }
+    });
+     
+    /* Add a click handler for the delete row */
+    $('#delete').click( function() {
+        var anSelected = fnGetSelected( oTable );
+        if ( anSelected.length !== 0 ) {
+            oTable.fnDeleteRow( anSelected[0] );
+        }
+    } );
+     
+    /* Init the table */
+    //oTable = $('#example').dataTable( );
 
-					
+ 
+ 
+/* Get the rows which are currently selected */
+	
 					
 				}
             });
             
 
         }
-
+		function fnGetSelected( oTableLocal )
+	{
+		return oTableLocal.$('tr.row_selected');
+	}	
         function disconnect() {
             if (ws) { ws.close(); }
             ws = null;
