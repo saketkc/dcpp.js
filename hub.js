@@ -2,32 +2,10 @@ var serverURL = "ws://localhost:8080";
 		var ws = new Websock();
 		var nick = $("#nick").val();	
 		var hubConnected = false;
-		var all_results_array = [{nick:"",path:"",size:""}];
+		var all_results_array = [];
 		var oTable;
 		var giRedraw = false;
 		var isHelloCalled = false;
-
-
-		//1 - Establishin connection, expecting a $ Hello
-		//2  - Connection establised, send MYINFo and wait for IgnoreMessagge
-		
-
-		// Coded by Mardeg
-function nibbleswap(bits) {
-	return ((bits << 4) & 240) | ((bits >>> 4) & 15);
-}
-function chr(b) {
-	return (("..0.5.36.96.124.126.").indexOf("."+b+".")>0)?"/%DCN"+(0).toPrecision(4-b.toString().length).substr(2)+b+"%/":String.fromCharCode(b);
-}
-function lock2key(lock) {
-	var key = chr(nibbleswap(lock.charCodeAt(0) ^ lock.charCodeAt(-1) ^ lock.charCodeAt(-2) ^ 5));
-	for (var i=1; i<lock.length; i++) {
-		key += chr(nibbleswap(lock.charCodeAt(i) ^ lock.charCodeAt(i - 1)));
-	}
-	return key;
-}
-
-
 
         function connect() {
 			$("#loading").show();
@@ -110,36 +88,33 @@ function lock2key(lock) {
             }
           }
 		jQuery("#datatables").jqGrid({
-	datatype: "local",
-	height: 250,
-	autowidth:true,
-	 records: "records",
+      datatype: "local",
+      height: 250,
+      autowidth:true,
+      records: "records",
 
-	
-
-
-   	colNames:['Nick','Path', 'Size'],
-   	colModel:[
-   		{name:'nick',index:'nick', width:10, align:"center",sorttype:"string"},		
-   		{name:'path',index:'path', width:190,align:"center",sorttype:"string"},		
-   		{name:'size',index:'size', width:10,sorttype:"string"}		
-   	],
+      colNames:['Nick','Path', 'Size'],
+      colModel:[
+        {name:'nick',index:'nick', width:10, align:"center",sorttype:"string"},		
+        {name:'path',index:'path', width:190,align:"center",sorttype:"string"},		
+        {name:'size',index:'size', width:10,sorttype:"int"}		
+      ],
    
-   	sortname: 'size',
-    viewrecords: true,
-    sortorder: "desc",
-   	onSelectRow: function(id){ 
+      sortname: 'size',
+      viewrecords: true,
+      sortorder: "desc",
+      onSelectRow: function(id){ 
       
       //var content = $('getCell', id , 'nick');
-      alert(id);
-      index = parseInt(id)-1;
-      getClient();
-   },
+        alert(id);
+        index = parseInt(id)-1;
+        getClient();
+     },
    	
    	caption: "All Results"
-});
-jQuery("#datatables").jqGrid('navGrid','#ptoolbar',{del:false,add:false,edit:false,search:false});
-jQuery("#datatables").jqGrid('filterToolbar',{stringResult: true,searchOnEnter : false});
+  });
+  jQuery("#datatables").jqGrid('navGrid','#ptoolbar',{del:false,add:false,edit:false,search:false});
+  jQuery("#datatables").jqGrid('filterToolbar',{stringResult: true,searchOnEnter : false});
 
 for(var i=0;i<=all_results_array.length;i++){
 	jQuery("#datatables").jqGrid('addRowData',i+1,all_results_array[i]);

@@ -56,7 +56,7 @@ function connectClient(response) {
     else if(sentSend) {
       contents = contents.concat(data);
       progress += len;
-      drawProgress(progress, results[index]['size']);
+      //drawProgress(progress, results[index]['size']);
       console.log(progress);
       if(progress === all_results_array[index]['size']) {
         
