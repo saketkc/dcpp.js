@@ -95,12 +95,12 @@ function lock2key(lock) {
 						data[1]="";
 						var filepath_with_size = data.join(" ");
 						var split_file_name = filepath_with_size.split(".");
-						if (split_file_name.length==1){
+						//if (split_file_name.length<2){
 							var filesize_with_ext = split_file_name.pop(); 
-							if (nickname!="" && filesize!="" && actual_file_name!="")
-						{all_results_array.push({id:String(i),nick:nickname,path:filesize_with_ext,size:0});}
+							//if (nickname!="" && filesize!="" && actual_file_name!="")
+						/*{all_results_array.push({id:String(i),nick:nickname,path:filesize_with_ext,size:0});}
 						}
-						else {
+						else {*/
 						
 						var filename_without_ext = split_file_name.join("");
 						var filesize = filesize_with_ext.replace( /^\D+/g, '');
@@ -108,11 +108,11 @@ function lock2key(lock) {
 						var actual_file_name = filename_without_ext +"."+extension
 						//while filesize
 						if (nickname!="" && filesize!="" && actual_file_name!="")
-						{all_results_array.push([{id:String(i),nick:nickname,path:actual_file_name,size:filesize}]);}	
+						{all_results_array.push({id:String(i),nick:nickname,path:actual_file_name,size:filesize});}	
 						
 						
 						
-					}
+					//}
 				}
 					//console.log(all_results_array);
 					
@@ -120,6 +120,9 @@ function lock2key(lock) {
 	datatype: "local",
 	height: 250,
 	autowidth:true,
+	repeatitems: false,
+	 records: "records",
+
 	
 
 
