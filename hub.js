@@ -107,6 +107,7 @@ function lock2key(lock) {
 						var filesize = filesize_with_ext.replace( /^\D+/g, '');
 						var extension = filesize_with_ext.replace( /\d+$/, '');
 						var actual_file_name = filename_without_ext +"."+extension
+						actual_file_name = actual_file_name.replace(/[\n\r]/g, '');
 						//while filesize
 						if (nickname!="" && filesize!="" && actual_file_name!="")
 						{all_results_array.push({id:String(i),nick:nickname,path:actual_file_name,size:filesize});}	
