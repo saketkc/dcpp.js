@@ -49,7 +49,6 @@ function lock2key(lock) {
             ws.on('message', function () {
                 //msg("Received: " + ws.rQshiftStr());
                 var response = ws.rQshiftStr();
-                console.log(response);
                 //Check for $hello in reponse
 				// if response has hello then execute the following stateme
 				var responseContainsHello = response.indexOf("$Hello");
@@ -59,9 +58,9 @@ function lock2key(lock) {
 				var responseContainsSearchResults = response.indexOf("$SR");
 				
 				
-				if (responseContainsHello>=0 && isHelloCalled==false){ 
+				if (responseContainsHello >= 0 && !isHelloCalled){ 
 					  console.log('Hello');
-					  ishelloCalled=true;
+					  isHelloCalled = true;
 						ws.send_string("$MyINFO $ALL "+nick+" <++ V:0.673,M:P,H:1/0/0,S:2>$ $0.1.$$10240$|");
 						hubConnected = true;
 						$("#connect-menu").slideUp();
@@ -74,10 +73,14 @@ function lock2key(lock) {
 					$("#search-menu").show().slideDown();				
 				}
 				else if(responseContainsConnect>=0){
+          console.log('ConnectToMe');
+          
 					response_with_response = response.slice(responseContainsConnect);
-					first_occurence_of_pipe = response_with_response.search("|");
+          console.log(response_with_response);
+					first_occurence_of_pipe = response_with_response.search('\\|');
 					responseData = response_with_response.slice(0,first_occurence_of_pipe);				
-					
+          console.log(responseData);
+					connectClient(responseData);
 				}
 				
 				else if (responseContainsSearchResults>=0){
@@ -115,14 +118,16 @@ function lock2key(lock) {
 
    	colNames:['Nick','Path', 'Size'],
    	colModel:[
-   		{name:'nick',index:'nick', width:100, align:"right",sorttype:"string"},		
-   		{name:'path',index:'path', width:80,align:"right",sorttype:"string"},		
-   		{name:'size',index:'size', width:150,sorttype:"string"}		
+   		{name:'nick',index:'nick', width:10, align:"center",sorttype:"string"},		
+   		{name:'path',index:'path', width:190,align:"center",sorttype:"string"},		
+   		{name:'size',index:'size', width:30,sorttype:"string"}		
    	],
    	onSelectRow: function(id){ 
       
-      var content = $('getCell', id , 'nick');
+      //var content = $('getCell', id , 'nick');
       alert(id);
+      index = id;
+      getClient();
    },
    	
    	caption: "All Results"
