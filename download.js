@@ -1,5 +1,6 @@
 var serverURL, ws, nick;
 var all_results_array, index;
+var url;
 
 function getClient() {
   console.log
@@ -56,13 +57,14 @@ function connectClient(response) {
     else if(sentSend) {
       contents.push.apply(contents, data);
       progress += len;
-      //console.log(progress);
       drawProgress(progress, all_results_array[index][3]);
       if(progress === all_results_array[index][3]) {
-        
+		console.log("Complete");
+        $("#progress-bar").hide();
+        $("#download").show();
         var blob = createBlob(contents);
-        var url = webkitURL.createObjectURL(blob);
-        initMedia(url);
+        url = webkitURL.createObjectURL(blob);
+        //initMedia(url);
         client.close();
       }
     }
@@ -79,7 +81,7 @@ function initMedia(url) {
   $('#mp3').attr('src', url);
 }
   
-function saveToFile(url) {
+function saveToFile() {
   var path = all_results_array[index][2];
   path = path.split('\\');
   filename = path[path.length-1];
@@ -91,7 +93,6 @@ function drawProgress(status, total) {
 	
   //$("#progress-bar").show();
   var value = status/total*100;
-  
   $("#progress-bar").progressbar({value: value});
   
 }

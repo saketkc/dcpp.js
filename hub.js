@@ -84,7 +84,7 @@ var serverURL = "ws://localhost:8080";
                    String(counter),
                    nickname,
                    actual_file_name,
-                   filesize
+                   parseInt(filesize)
                   ]);
 				counter+=1;
             }
@@ -155,8 +155,8 @@ var serverURL = "ws://localhost:8080";
 		$(document).ready(function($){
 			$("#search-menu").hide();
 			$("#loading").hide();
-			
-			//$( "#progress-bar" ).hide();
+			$("#download").click(saveToFile);
+			$( "#download" ).hide();
 
 			
 		
