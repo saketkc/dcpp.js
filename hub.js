@@ -2,7 +2,7 @@ var serverURL = "ws://localhost:8080";
 		var ws = new Websock();
 		var nick = $("#nick").val();	
 		var hubConnected = false;
-		var all_results_array = [[{nick:"",path:"",size:""}]];
+		var all_results_array = [{nick:"",path:"",size:""}];
 		var oTable;
 		var giRedraw = false;
 		var isHelloCalled = false;
@@ -35,7 +35,7 @@ function lock2key(lock) {
 			var port = $("#port").val();
 			var hub = $("#hubaddress").val();
 			var uri = serverURL+"?token="+hub+":"+port;
-			console.log(serverURL+"?token="+hub+port);
+			console.log(uri);
             ws.open(uri);
             ws.on('open', function () {
 				console.log("connected");
@@ -86,7 +86,7 @@ function lock2key(lock) {
 				else if (responseContainsSearchResults>=0){
 					
 					split_response = response.split("$SR");
-					for(i=0;i<split_response.length;i++){
+					for(var i=0;i<split_response.length;i++){
 						var data = split_response[i].split(" ");
 						var split_length =  data.length;
 						var hub = data.pop();
@@ -95,18 +95,25 @@ function lock2key(lock) {
 						data[1]="";
 						var filepath_with_size = data.join(" ");
 						var split_file_name = filepath_with_size.split(".");
-						var filesize_with_ext = split_file_name.pop(); 
+						if (split_file_name.length==1){
+							var filesize_with_ext = split_file_name.pop(); 
+							if (nickname!="" && filesize!="" && actual_file_name!="")
+						{all_results_array.push({id:String(i),nick:nickname,path:filesize_with_ext,size:0});}
+						}
+						else {
+						
 						var filename_without_ext = split_file_name.join("");
 						var filesize = filesize_with_ext.replace( /^\D+/g, '');
 						var extension = filesize_with_ext.replace( /\d+$/, '');
 						var actual_file_name = filename_without_ext +"."+extension
 						//while filesize
 						if (nickname!="" && filesize!="" && actual_file_name!="")
-						{all_results_array.push([{nick:nickname,path:actual_file_name,size:filesize}]);}	
+						{all_results_array.push([{id:String(i),nick:nickname,path:actual_file_name,size:filesize}]);}	
 						
 						
 						
 					}
+				}
 					//console.log(all_results_array);
 					
 		jQuery("#datatables").jqGrid({
@@ -120,8 +127,12 @@ function lock2key(lock) {
    	colModel:[
    		{name:'nick',index:'nick', width:10, align:"center",sorttype:"string"},		
    		{name:'path',index:'path', width:190,align:"center",sorttype:"string"},		
-   		{name:'size',index:'size', width:30,sorttype:"string"}		
+   		{name:'size',index:'size', width:10,sorttype:"string"}		
    	],
+   
+   	sortname: 'size',
+    viewrecords: true,
+    sortorder: "desc",
    	onSelectRow: function(id){ 
       
       //var content = $('getCell', id , 'nick');
@@ -132,6 +143,9 @@ function lock2key(lock) {
    	
    	caption: "All Results"
 });
+jQuery("#datatables").jqGrid('navGrid','#ptoolbar',{del:false,add:false,edit:false,search:false});
+jQuery("#datatables").jqGrid('filterToolbar',{stringResult: true,searchOnEnter : false});
+
 for(var i=0;i<=all_results_array.length;i++){
 	jQuery("#datatables").jqGrid('addRowData',i+1,all_results_array[i]);
 }
