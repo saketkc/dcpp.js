@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>dcpp.js | DC++ straight off your Browser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/docs/assets/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="bootstrap/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <style type="text/css" title="currentStyle">
+			@import "./include/bootstrap/css/demo_page.css";
+			@import "./include/bootstrap/css/demo_table.css";
+		</style>
+    <link rel="shortcut icon" href="bootstrap/docs/assets/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/docs/assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/docs/assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/docs/assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="bootstrap/docs/assets/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="stylesheet" type="text/css" media="screen" href="include/bootstrap/css/jquery-ui-1.8.1.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="include/bootstrap/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="include/bootstrap/css/ui.multiselect.css" />
+
+    <script src="include/util.js"></script>
+    <script src="include/base64.js"></script>
+    
+    <script src="include/websock.js"></script> 
+    <script src="bootstrap/docs/assets/js/jquery.js"></script>
+    <script src="include/jquery.dataTables.js"></script>
+    <script src="include/jquery.jqGrid.min.js"></script>
+    <script src="hub.js"></script>
+    <script src="download.js"></script>
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">dc++.js</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+     <div class="row"><input type="button" class="btn" onClick="disconnect();" value="Disconnect"></div>
+ 
+	<form class="form-horizontal">
+    <fieldset>
+        <div class="row-fluid hero-unit" id="connect-menu"> 
+        <h2>Connect to a Hub<div><img src="include/bootstrap/img/progress-bar.gif" id="loading" ></div>
+</h2>
+            <div class="span6">
+                <div class="control-group">
+                    <label class="control-label" for="Address"><strong>Hub Address</strong></label>
+                    <div class="controls">
+                        <input data-val="true" data-val-required="Required" id="hubaddress" name="hubaddress" type="text"  placeholder="10.105.18.1" value="10.105.18.1" class="valid">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="Port"><strong>Port</strong></label>
+                    <div class="controls">
+                        <input data-val="true" data-val-required="Required" id="port" name="port" type="text"  placeholder="411" value="411" class="valid">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="Nick"><strong>Nick</strong></label>
+                    <div class="controls">
+                        <input data-val="true" data-val-required="Required" id="nick" name="nick" type="text"  placeholder="Nick" value="test12" class="valid">
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    
+                    <div class="controls">
+                        <input class="btn btn-primary btn-large" type="button" value="Connect" id="submit" onclick="connect();">
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </fieldset>
+</form>
+	<div class="row-fluid" id="search-menu">
+	 
+		<h2>Search</h2>
+		<form class="well form-search">
+  <input type="text" class="input-xlarge search-query" id="search-query">
+  <input type="button" class="btn" id="search" value="Search" onClick="searchDC();">
+</form>
+	</div>
+	
+	<table id="datatables" width="100%">
+	
+          </table>
+
+	 
+ 
+ 
+ </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Chaitanya Talnikar, Saket Choudhary  2012</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script src="bootstrap/docs/assets/js/bootstrap-transition.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-alert.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-modal.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-dropdown.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-tab.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-tooltip.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-popover.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-button.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-collapse.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-carousel.js"></script>
+    <script src="bootstrap/docs/assets/js/bootstrap-typeahead.js"></script>
+
+  </body>
+</html>
