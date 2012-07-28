@@ -3,7 +3,7 @@ var all_results_array, index;
 
 function getClient() {
   console.log
-  ws.send_string('$RevConnectToMe '+nick+' '+all_results_array[index]['nick']+'|');
+  ws.send_string('$RevConnectToMe '+nick+' '+all_results_array[index][1]+'|');
   console.log('Client Request sent');
 }
 
@@ -43,7 +43,7 @@ function connectClient(response) {
       var key = '14D1C011B0A010104120D1B1B1C0C030D03010203010203010203010203010203010';
       key = hex2a(key);
       client.send_string('$Supports |$Direction Download 30000|$Key '+key+'|');
-      client.send_string('$Get '+all_results_array[index]['path']+'$1|');
+      client.send_string('$Get '+all_results_array[index][2]+'$1|');
       console.log('Sent Key & Get');
       sentGet = true;
     }
@@ -54,11 +54,11 @@ function connectClient(response) {
       sentSend = true;
     }
     else if(sentSend) {
-      contents = contents.concat(data);
+      contents.push.apply(contents, data);
       progress += len;
-      //drawProgress(progress, results[index]['size']);
       console.log(progress);
-      if(progress === all_results_array[index]['size']) {
+      //drawProgress(progress, results[index]['size']);
+      if(progress === all_results_array[index][3]) {
         
         var blob = createBlob(contents);
         var url = webkitURL.createObjectURL(blob);
@@ -80,7 +80,7 @@ function initMedia(url) {
 }
   
 function saveToFile(url) {
-  var path = all_results_array[index]['path'];
+  var path = all_results_array[index][2];
   path = path.split('\\');
   filename = path[path.length-1];
   $('#download').attr('download', filename);
