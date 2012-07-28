@@ -142,7 +142,7 @@ function lock2key(lock) {
       
       //var content = $('getCell', id , 'nick');
       alert(id);
-      index = id;
+      index = parseInt(id)-1;
       getClient();
    },
    	

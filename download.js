@@ -3,8 +3,15 @@ var all_results_array, index;
 
 function getClient() {
   console.log
-  ws.send_string('$RevConnectToMe '+nick+' '+all_results_array[index][0]['nick']+'|');
+  ws.send_string('$RevConnectToMe '+nick+' '+all_results_array[index]['nick']+'|');
   console.log('Client Request sent');
+}
+
+function hex2a(hex) {
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
 }
 
 function connectClient(response) {
@@ -13,8 +20,10 @@ function connectClient(response) {
   var client = new Websock();
   var uri = serverURL + '?token='+ip_port;
   
+  var sentNick = false;
   var sentGet = false;
   var sentSend = false;
+  var sentKey = false;
   var contents = [];
   var progress = 0;
   
@@ -22,24 +31,41 @@ function connectClient(response) {
   client.open(uri);
   client.on('open', function () {
     console.log("client Connected");
-    client.send_string('$MyNick '+nick+'|$Lock EXTENDEDPROTOCOLABCABCABCABCABCABC Pk=DCPLUSPLUS0.673|');
-    client.send_string('$Get '+all_results_array[index][0]['path']+'|');
-    sentGet = true;
+    client.send_string('$MyNick '+nick+'|'+'|$Lock EXTENDEDPROTOCOLABCABCABCABCABCABC Pk=DCPLUSPLUS0.673|');
+    sentNick = true;
   });
   client.on('message', function () {
     var len = client.rQlen();
-    var data = client.rQshiftBytes();
+    //var data = client.rQshiftBytes();
+    var data = client.rQshiftStr();
     console.log(data);
-    if(sentGet) {
+    
+    if(sentNick) {
+      sentNick = false;
+      var key = '14D1C011B0A010104120D1B1B1C0C030D03010203010203010203010203010203010';
+      key = hex2a(key);
+      client.send_string('$Supports |$Direction Download 30000|$Key '+key+'|');
+      console.log('Sent Key');
+      //~ sentKey = true;
+    //~ }
+    //~ else if(sentKey) {
+      //~ sentKey = false;
+      client.send_string('$Get '+all_results_array[index]['path']+'$1|');
+      console.log('$Get '+all_results_array[index]['path']+'$1|');
+      console.log('Sent Get');
+      sentGet = true;
+    }
+    else if(sentGet) {
       sentGet = false;
       client.send_string('$Send|');
+      console.log('Sent Send');
       sentSend = true;
     }
     else if(sentSend) {
       contents = contents.concat(data);
       progress += len;
       console.log(progress);
-      if(progress === all_results_array[index][0]['size']) {
+      if(progress === all_results_array[index]['size']) {
         
         var blob = createBlob(contents);
         var url = webkitURL.createObjectURL(blob);
@@ -61,7 +87,7 @@ function initMedia(url) {
 }
   
 function saveToFile(url) {
-  var path = all_results_array[index][0]['path'];
+  var path = all_results_array[index]['path'];
   path = path.split('\\');
   filename = path[path.length-1];
   $('#download').attr('download', filename);
