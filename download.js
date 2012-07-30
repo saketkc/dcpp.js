@@ -59,5 +59,5 @@ Downloader.prototype.initMedia = function() {
 }
   
 Downloader.prototype.drawProgress = function(status) {
-  $("#progress-bar").progressbar({value: status});
+  $("#progress-bar").progressbar('value', status*100);
 }

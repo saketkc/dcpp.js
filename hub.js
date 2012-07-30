@@ -111,6 +111,7 @@ var serverURL = "ws://localhost:8080";
 				var index = parseInt(id)-1;
 				downloader = new Downloader(all_results_array[index]);
         $("#download").click(downloader.saveToFile);
+        $("#progress-bar").show();
         
         if ( $(this).hasClass('row_selected') ) {
             $(this).removeClass('row_selected');
@@ -158,7 +159,8 @@ var serverURL = "ws://localhost:8080";
 		$(document).ready(function($){
 			$("#search-menu").hide();
 			$("#loading").hide();
-			
+			$('#progress-bar').progressbar();
+      $('#progress-bar').hide();
 			$( "#download" ).hide();
 
 			
