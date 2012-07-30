@@ -74,7 +74,7 @@ Util.init_logging = function (level) {
     } else {
         Util._log_level = level;
     }
-    if (typeof window.console === "undefined") {
+    /*if (typeof window.console === "undefined") {
         if (typeof window.opera !== "undefined") {
             window.console = {
                 'log'  : window.opera.postError,
@@ -86,13 +86,13 @@ Util.init_logging = function (level) {
                 'warn' : function(m) {},
                 'error': function(m) {}};
         }
-    }
+    }*/
 
     Util.Debug = Util.Info = Util.Warn = Util.Error = function (msg) {};
     switch (level) {
         case 'debug': Util.Debug = function (msg) { console.log(msg); };
         case 'info':  Util.Info  = function (msg) { console.log(msg); };
-        case 'warn':  Util.Warn  = function (msg) { console.warn(msg); };
+        case 'warn':  Util.Warn  = function (msg) { postMessage(msg); };
         case 'error': Util.Error = function (msg) { console.error(msg); };
         case 'none':
             break;
@@ -207,7 +207,7 @@ Util.getPosition = function (obj) {
 Util.getEventPosition = function (e, obj, scale) {
     var evt, docX, docY, pos;
     //if (!e) evt = window.event;
-    evt = (e ? e : window.event);
+    //evt = (e ? e : window.event);
     evt = (evt.changedTouches ? evt.changedTouches[0] : evt.touches ? evt.touches[0] : evt);
     if (evt.pageX || evt.pageY) {
         docX = evt.pageX;
@@ -261,22 +261,11 @@ Util.stopEvent = function(e) {
 
 
 // Set browser engine versions. Based on mootools.
-Util.Features = {xpath: !!(document.evaluate), air: !!(window.runtime), query: !!(document.querySelector)};
+Util.Features = {xpath: true, air: false, query: true};
 
 Util.Engine = {
-    // Version detection break in Opera 11.60 (errors on arguments.callee.caller reference)
-    //'presto': (function() {
-    //         return (!window.opera) ? false : ((arguments.callee.caller) ? 960 : ((document.getElementsByClassName) ? 950 : 925)); }()),
-    'presto': (function() { return (!window.opera) ? false : true; }()),
-
-    'trident': (function() {
-            return (!window.ActiveXObject) ? false : ((window.XMLHttpRequest) ? ((document.querySelectorAll) ? 6 : 5) : 4); }()),
     'webkit': (function() {
             try { return (navigator.taintEnabled) ? false : ((Util.Features.xpath) ? ((Util.Features.query) ? 525 : 420) : 419); } catch (e) { return false; } }()),
-    //'webkit': (function() {
-    //        return ((typeof navigator.taintEnabled !== "unknown") && navigator.taintEnabled) ? false : ((Util.Features.xpath) ? ((Util.Features.query) ? 525 : 420) : 419); }()),
-    'gecko': (function() {
-            return (!document.getBoxObjectFor && window.mozInnerScreenX == null) ? false : ((document.getElementsByClassName) ? 19 : 18); }())
 };
 if (Util.Engine.webkit) {
     // Extract actual webkit version if available
@@ -286,7 +275,6 @@ if (Util.Engine.webkit) {
             return parseFloat(v, 10);
         })(Util.Engine.webkit);
 }
-
 Util.Flash = (function(){
     var v, version;
     try {

@@ -17,11 +17,8 @@
 
 // Load Flash WebSocket emulator if needed
 
-if (window.WebSocket && !window.WEB_SOCKET_FORCE_FLASH) {
+if (WebSocket) {
     Websock_native = true;
-} else if (window.MozWebSocket && !window.WEB_SOCKET_FORCE_FLASH) {
-    Websock_native = true;
-    window.WebSocket = window.MozWebSocket;
 } else {
     /* no builtin WebSocket so load web_socket.js */
 

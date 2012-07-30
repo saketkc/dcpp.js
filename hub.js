@@ -6,6 +6,7 @@ var serverURL = "ws://localhost:8080";
 		var oTable;
 		var giRedraw = false;
 		var isHelloCalled = false;
+    var downloader;
 		var counter = 1;
 
         function connect() {
@@ -59,7 +60,7 @@ var serverURL = "ws://localhost:8080";
 					first_occurence_of_pipe = response_with_response.search('\\|');
 					responseData = response_with_response.slice(0,first_occurence_of_pipe);				
           console.log(responseData);
-					connectClient(responseData);
+					downloader.createDownloader(responseData);
 				}
 				
 				else if (responseContainsSearchResults>=0){
@@ -107,8 +108,10 @@ var serverURL = "ws://localhost:8080";
 
 			$("#example tbody tr").click( function( e ) {
 				id = $(this).find("td").html();
-				index = parseInt(id)-1;
-				getClient();
+				var index = parseInt(id)-1;
+				downloader = new Downloader(all_results_array[index]);
+        $("#download").click(downloader.saveToFile);
+        
         if ( $(this).hasClass('row_selected') ) {
             $(this).removeClass('row_selected');
         }
@@ -155,7 +158,7 @@ var serverURL = "ws://localhost:8080";
 		$(document).ready(function($){
 			$("#search-menu").hide();
 			$("#loading").hide();
-			$("#download").click(saveToFile);
+			
 			$( "#download" ).hide();
 
 			
