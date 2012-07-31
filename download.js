@@ -2,10 +2,11 @@ var serverURL, ws, nick;
 
 Downloader = function(result) {
   
-  this.url = null;
   this.path = result[2];
   this.size = result[3];
   this.nick = result[1];
+  var tmp = this.path.split('\\');
+  this.filepath = tmp[tmp.length-1];
   
   ws.send_string('$RevConnectToMe ' + nick + ' ' + this.nick + '|');
   console.log('Client Request sent');
@@ -24,7 +25,7 @@ Downloader.prototype.createDownloader = function(resp) {
         obj.drawProgress(data);
         break;
       default:
-        obj.createDownload(data);
+        obj.createDownload(data['url']);
         break;
     }
   }, false);
@@ -33,25 +34,17 @@ Downloader.prototype.createDownloader = function(resp) {
                 size:this.size,
                 nick:nick,
                 response: resp, 
-                url: serverURL
+                url: serverURL,
+                filepath:this.filepath
              };
   
   downloader.postMessage(data);
 }
 
-Downloader.prototype.saveToFile = function() {
-  var path = this.path.split('\\');
-  filename = path[path.length-1];
-  $('#download').attr('download', filename);
-  $('#download').attr('href', this.url);
-}
-
-Downloader.prototype.createDownload = function(contents) {
+Downloader.prototype.createDownload = function(url) {
   $("#progress-bar").hide();
   $("#download").show();
-  var typed = new Uint8Array(contents);
-  var blob = new Blob([typed], {type: 'audio/mp3'});
-  this.url = webkitURL.createObjectURL(blob);
+  $('#download').attr('href', url);
 }
 
 Downloader.prototype.initMedia = function() {

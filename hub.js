@@ -110,7 +110,6 @@ var serverURL = "ws://localhost:8080";
 				id = $(this).find("td").html();
 				var index = parseInt(id)-1;
 				downloader = new Downloader(all_results_array[index]);
-        $("#download").click(downloader.saveToFile);
         $("#progress-bar").show();
         
         if ( $(this).hasClass('row_selected') ) {

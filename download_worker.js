@@ -7,33 +7,32 @@ function hex2a(hex) {
     return str;
 }
 
-function connectClient() {
-  
-  var ip_port =  self.response.split(' ')[2].split('|')[0];
+function connectClient(data) {
+  var ip_port =  data['response'].split(' ')[2].split('|')[0];
   var client = new Websock();
-  var uri = self.url + '?token=' + ip_port;
+  var uri = data['url'] + '?token=' + ip_port;
   
   var sent;
-  var contents = [];
   var progress = 0;
   
   self.postMessage("connecting to: " + uri);
   
   client.on('open', function () {
     self.postMessage("client Connected");
-    client.send_string('$MyNick '+self.nick+'|'+'|$Lock EXTENDEDPROTOCOLABCABCABCABCABCABC Pk=DCPLUSPLUS0.673|');
+    client.send_string('$MyNick '+data['nick']+'|$Lock EXTENDEDPROTOCOLABCABCABCABCABCABC Pk=DCPLUSPLUS0.673|');
+    self.postMessage('Sent Nick');
     sent = 'nick';
   });
   
   client.on('message', function () {
     var len = client.rQlen();
-    var data = client.rQshiftBytes();
+    var bytes = client.rQshiftBytes();
     
     switch(sent) {
       case 'nick':
-        var key = hex2a('14D1C011B0A010104120D1B1B1C0C030D03010203010203010203010203010203010');
+        var key = self.hex2a('14D1C011B0A010104120D1B1B1C0C030D03010203010203010203010203010203010');
         client.send_string('$Supports |$Direction Download 30000|$Key '+key+'|');
-        client.send_string('$Get ' + self.path + '$1|');
+        client.send_string('$Get ' + data['path'] + '$1|');
         self.postMessage('Sent Key & Get');
         sent = 'get';
         break;
@@ -43,13 +42,12 @@ function connectClient() {
         sent = 'send';
         break;
       case 'send':
-        //contents.push.apply(contents, data);
-        contents = contents.concat(data);
+        self.writeToFile(bytes);
         progress += len;
-        self.postMessage(progress / self.size);
-        if(progress === self.size) {
+        self.postMessage(progress / data['size']);
+        if(progress === data['size']) {
           client.close();
-          self.postMessage(contents);
+          self.postMessage({url: self.fileEntry.toURL()});
         }
         break;
     }
@@ -59,14 +57,19 @@ function connectClient() {
   
 }
 
+function writeToFile(data) {
+  var typed = new Uint8Array(data);
+  var blob = new Blob([typed]);
+  self.fileWriter.write(blob);
+}
+
 self.addEventListener('message', function(e) {
   var data = e.data;
-  self.nick = data['nick'];
-  self.size = data['size'];
-  self.path = data['path'];
-  self.url = data['url'];
-  self.response = data['response'];
   
-  connectClient();
+  var fs = webkitRequestFileSystemSync(TEMPORARY, data['size'] + 1);
+  self.fileEntry = fs.root.getFile(data['filepath'] , {create: true});
+  self.fileWriter = fileEntry.createWriter();
+  
+  self.connectClient(data);
 }, false);
 
